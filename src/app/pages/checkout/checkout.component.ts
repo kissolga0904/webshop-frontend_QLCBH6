@@ -54,7 +54,7 @@ export class CheckoutComponent implements OnInit {
       cvc: ['', [Validators.required, Validators.pattern(/^\d{3}$/)]],
       address: this.fb.group({
         street: ['', Validators.required],
-        houseNumber:['', Validators.required],
+        houseNumber:['', [Validators.required, Validators.pattern(/^\d+$/)]],
         city: ['', Validators.required],
         postalCode: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
         country: ['', Validators.required],
@@ -94,7 +94,7 @@ export class CheckoutComponent implements OnInit {
 
   formatCardNumber() {
     const input = this.checkoutForm.get('cardNumber');
-    let value = input?.value.replace(/\D/g, ''); // remove non-digits
+    let value = input?.value.replace(/\D/g, ''); 
     if (value.length > 16) value = value.slice(0, 16);
   
     const formatted = value.replace(/(\d{4})(?=\d)/g, '$1-');
@@ -103,7 +103,7 @@ export class CheckoutComponent implements OnInit {
 
   formatExpiry() {
     const control = this.checkoutForm.get('expiry');
-    let value = control?.value.replace(/\D/g, ''); // remove non-digits
+    let value = control?.value.replace(/\D/g, ''); 
   
     if (value.length > 4) value = value.slice(0, 4);
     if (value.length >= 3) {
@@ -115,7 +115,7 @@ export class CheckoutComponent implements OnInit {
   
   onShippingMethodChange(selectedId: number) {
     this.selectedShippingMethodId = selectedId;
-    this.calculateTotal();  // Recalculate the total when the shipping method changes
+    this.calculateTotal();  
   }
 
   onSubmit() {
@@ -129,7 +129,7 @@ export class CheckoutComponent implements OnInit {
         city: address.city,
         postalCode: Number(address.postalCode),
         country: address.country,
-        paymentMethodId: 1, // fixed card payment for now
+        paymentMethodId: 1, 
         shippingMethodId: Number(formData.shipping)
       };
 
@@ -141,7 +141,6 @@ export class CheckoutComponent implements OnInit {
           }
           )
           console.log('Order placed successfully');
-          // optionally reset form or navigate
         },
         error: (err) => {
           console.error('Failed to place order:', err);

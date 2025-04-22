@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common'; 
+import { CartService } from '../../services/cart.service';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 interface CartItem {
   id: number;
@@ -14,6 +16,8 @@ interface Product{
   name: string;
   price: number;
   description: string;
+  filename?: string;
+  quantity: number;
 }
 
 @Component({
@@ -29,19 +33,19 @@ export class CartComponent implements OnInit {
   shipping: number = 8;
   total: number = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(private cartService: CartService, private errorHandlerService: ErrorHandlerService) {}
 
   ngOnInit() {
     this.fetchCartItems();
   }
 
   fetchCartItems() {
-    this.http.get<CartItem[]>('http://localhost:8080/api/cart/get') 
-      .subscribe(items => {
-        this.cartItems = items;
-        console.log(this.cartItems); 
-        this.calculateTotal();
-      });
+    this.cartService.getCart().subscribe(
+      this.errorHandlerService.buildSubscribeHandler<CartItem[]>(
+      items => {
+      this.cartItems = items;
+      this.calculateTotal();
+    }));
   }
 
   calculateTotal() {
@@ -52,19 +56,32 @@ export class CartComponent implements OnInit {
   }
 
   increaseQuantity(item: CartItem) {
-    item.quantity++;
-    this.calculateTotal();
+    const newQuantity = item.quantity + 1;
+    
+    // Check if new quantity exceeds the available stock
+    if (newQuantity > item.product.quantity) {
+      alert(`Sorry, only ${item.product.quantity} left in stock!`);
+      return;
+    }
+  
+    // If the quantity is within stock limits, update cart quantity
+    this.cartService.updateCartQuantity(item.product.id, newQuantity)
+      .subscribe(() => this.fetchCartItems());
   }
 
   decreaseQuantity(item: CartItem) {
     if (item.quantity > 1) {
-      item.quantity--;
-      this.calculateTotal();
+      const newQuantity = item.quantity - 1;
+      this.cartService.updateCartQuantity(item.product.id, newQuantity)
+        .subscribe(() => this.fetchCartItems());
     }
   }
 
-  removeItem(id: number) {
-    this.cartItems = this.cartItems.filter(item => item.id !== id);
-    this.calculateTotal();
+  removeItem(item: CartItem) {
+    const productId = item.product.id;
+    console.log("Deleting product with ID:", productId);
+    this.cartService.deleteFromCart(productId)
+      .subscribe(() => this.fetchCartItems(),
+                 error => console.log("Error deleting product:", error));
   }
 }

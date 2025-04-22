@@ -17,7 +17,7 @@ interface NewUser {
   username: string;
   email: string;
   password: string;
-  roleId: number; // 1 for Admin, 2 for Customer
+  roleId: number; 
 }
 
 @Component({
@@ -33,7 +33,7 @@ export class UsersComponent implements OnInit {
     username: '',
     email: '',
     password: '',
-    roleId: 2,  // Default to Customer role
+    roleId: 2,  
   };
   
   roles = [
@@ -62,7 +62,7 @@ export class UsersComponent implements OnInit {
     if (confirm('Are you sure you want to delete this user?')) {
       this.userService.deleteUser(userId).subscribe({
         next: () => {
-          this.users = this.users.filter(u => u.id !== userId); // remove from list
+          this.users = this.users.filter(u => u.id !== userId); 
         },
         error: (err) => {
           console.error('Error deleting user:', err);
@@ -90,12 +90,11 @@ export class UsersComponent implements OnInit {
   }
 
   resetForm() {
-    // Reset form fields to their default values
     this.newUser = {
       username: '',
       email: '',
       password: '',
-      roleId: 2 // Default to Customer
+      roleId: 2 
     };
   }
 }

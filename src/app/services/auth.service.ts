@@ -1,9 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { jwtDecode } from 'jwt-decode';
-
-
 
 export interface RegistrationData{
   username: string;
@@ -47,8 +44,7 @@ export class AuthService {
     localStorage.setItem('jwt', token);
   }
 
-  setUsername(name: string) {
-    console.log('Setting username:', name); 
+  setUsername(name: string) { 
     this.username = name;
     localStorage.setItem('username', name);
   }
@@ -81,6 +77,11 @@ export class AuthService {
 
   loginUser(data: AuthenticationData): Observable<any>{
     return this.http.post(this.loginUrl, data);
+  }
+
+  isAdmin(): boolean {
+    const role = localStorage.getItem('role');
+    return role === 'ROLE_ADMIN'; 
   }
 
 }

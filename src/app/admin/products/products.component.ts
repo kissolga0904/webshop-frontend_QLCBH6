@@ -21,8 +21,8 @@ export class ProductsComponent {
     filename: '',
     quantity: 0
   };
-  isEditing: boolean = false;  // Flag to toggle between adding and editing
-  editingProduct: Product | null = null;  // To hold the product being edited
+  isEditing: boolean = false;  
+  editingProduct: Product | null = null;  
 
   constructor(private productService: ProductService, private http: HttpClient, private errorHandlerService: ErrorHandlerService) {}
 
@@ -60,7 +60,6 @@ export class ProductsComponent {
       const reader = new FileReader();
   
       reader.onload = () => {
-        // Convert image to base64 string (optional — depends on your backend expectation)
         const base64String = reader.result as string;
   
         const productData: Product = {
@@ -72,13 +71,12 @@ export class ProductsComponent {
         };
 
         if (this.isEditing && this.editingProduct) {
-          // If we're editing, update the product
           productData.id = this.editingProduct.id;
           this.productService.modifyProduct(productData).subscribe({
             next: (updatedProduct) => {
               console.log('Product updated:', updatedProduct);
-              this.loadProducts(); // Refresh product list
-              this.resetForm(); // Reset form
+              this.loadProducts(); 
+              this.resetForm(); 
             },
             error: (err) => {
               console.error('Error updating product:', err);
@@ -86,12 +84,11 @@ export class ProductsComponent {
             },
           });
         } else {
-          // If we're adding a new product
           this.productService.addProduct(productData).subscribe({
             next: (product) => {
               console.log('Product added:', product);
-              this.products.push(product); // Add product to table
-              this.resetForm(); // Reset form
+              this.products.push(product); 
+              this.resetForm();
             },
             error: (err) => {
               console.error('Error adding product:', err);
@@ -101,7 +98,7 @@ export class ProductsComponent {
         }
       };
   
-      reader.readAsDataURL(this.selectedFile); // triggers the onload() above
+      reader.readAsDataURL(this.selectedFile); 
     } else {
       console.log('Please fill in all fields and upload an image.');
       alert('Please fill in all fields and upload an image.');
@@ -111,21 +108,21 @@ export class ProductsComponent {
   resetForm() {
     this.newProduct = { name: '', description: '', price: 0, filename: '', quantity: 0 };
     this.selectedFile = null;
-    this.isEditing = false;  // Reset editing flag
-    this.editingProduct = null;  // Clear the editing product
+    this.isEditing = false;  
+    this.editingProduct = null;  
   }
 
   editProduct(product: Product) {
-    this.isEditing = true;  // Set editing mode
-    this.editingProduct = { ...product };  // Populate form with existing product data
-    this.newProduct = { ...product };  // Pre-fill the form with the product data
+    this.isEditing = true;  
+    this.editingProduct = { ...product };  
+    this.newProduct = { ...product };  
   }
 
   deleteProduct(product: Product): void {
     if (product.id !== undefined && product.id !== null) {
       this.productService.deleteProduct(product.id).subscribe({
         next: () => {
-          this.loadProducts(); // Reload products after deletion
+          this.loadProducts(); 
         },
         error: (err) => {
           console.error('Error deleting product:', err);

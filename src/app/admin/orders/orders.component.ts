@@ -37,7 +37,7 @@ export class OrdersComponent {
     if (confirm('Are you sure you want to delete this order?')) {
       this.orderService.deleteOrder(orderId).subscribe({
         next: () => {
-          this.orders = this.orders.filter((order) => order.id !== orderId); // Remove from list
+          this.orders = this.orders.filter((order) => order.id !== orderId); 
         },
         error: (err) => {
           console.error('Error deleting order:', err);
@@ -51,7 +51,7 @@ export class OrdersComponent {
     this.orderStatusService.getOrderStatus().subscribe(
       (data) => {
         this.orderStatuses = data;
-        this.cdr.detectChanges(); // manually trigger a re-render
+        this.cdr.detectChanges(); 
       }
     )
   }

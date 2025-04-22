@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { CartItem, CartService } from '../../services/cart.service';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,12 +13,25 @@ import { AuthService } from '../../services/auth.service';
 })
 export class NavbarComponent {
   username: string | null = null;
-  constructor(public authenticationService: AuthService){
+  cartCount: number= 0;
+  isAdmin: boolean;
+
+  constructor(public authenticationService: AuthService, private cartService: CartService, private errorHandlerService: ErrorHandlerService){
+    this.isAdmin = this.authenticationService.isAdmin();
   }
+
 
   ngOnInit(): void {
     this.username = localStorage.getItem('username');
     console.log('Username from localStorage:', this.username); 
+
+    this.cartService.cartCount$.subscribe(
+      this.errorHandlerService.buildSubscribeHandler<number>(
+      (count) => {
+      this.cartCount = count;
+    }));
+
+    this.cartService.refreshCartCount();
   }
 
   getUsername(){
@@ -30,6 +45,7 @@ export class NavbarComponent {
   logOut(){
     return this.authenticationService.logOut();
   }
+
 
 
 }

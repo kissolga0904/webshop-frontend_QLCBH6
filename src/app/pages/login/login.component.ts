@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'; 
 import { AuthenticationData, AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthService,
-    private router: Router
+    private router: Router,
+    private errorHandlerService: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +51,11 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         console.error('Login failed', err);
+        if (err.status === 401) {
+          alert('Incorrect username or password. Please try again.');
+        } else {
+          alert('An error occurred. Please try again later.');
+        }
       }
     });
   }

@@ -139,21 +139,39 @@
       <div formGroupName="address" class="mt-6">
         <label class="block text-sm font-medium">Street</label>
         <input formControlName="street" class="w-full mt-1 p-2 border rounded border-gray-200 px-4 py-3 text-sm"/>
+        <div *ngIf="checkoutForm.get('address.street')?.touched && checkoutForm.get('address.street')?.invalid" class="text-red-500 text-sm">
+          Street is required.
+        </div>
 
         <label class="block text-sm font-medium mt-4">House Number</label>
         <input formControlName="houseNumber" class="w-full mt-1 p-2 border rounded border-gray-200 px-4 py-3 text-sm" />
+        <div *ngIf="checkoutForm.get('address.houseNumber')?.touched && checkoutForm.get('address.houseNumber')?.hasError('required')" class="text-red-500 text-sm">
+          House number is required.
+        </div>
+        <div *ngIf="checkoutForm.get('address.houseNumber')?.touched && checkoutForm.get('address.houseNumber')?.hasError('pattern')" class="text-red-500 text-sm">
+          House number must be numeric.
+        </div>
 
         <label class="block text-sm font-medium mt-4">City</label>
         <input formControlName="city" class="w-full mt-1 p-2 border rounded border-gray-200 px-4 py-3 text-sm" />
+        <div *ngIf="checkoutForm.get('address.city')?.touched && checkoutForm.get('address.city')?.invalid" class="text-red-500 text-sm">
+          City is required.
+        </div>
 
         <label class="block text-sm font-medium mt-4">ZIP Code</label>
         <input formControlName="postalCode" class="w-full mt-1 p-2 border rounded border-gray-200 px-4 py-3 text-sm" />
+        <div *ngIf="checkoutForm.get('address.postalCode')?.touched && checkoutForm.get('address.postalCode')?.invalid" class="text-red-500 text-sm">
+          ZIP Code is required and must be 4 digits.
+        </div>
 
         <label class="block text-sm font-medium mt-4">Country</label>
         <select formControlName="country" class="w-full mt-1 p-2 border rounded border-gray-200 px-4 py-3 text-sm">
           <option value="" disabled>Select your country</option>
           <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
         </select>
+        <div *ngIf="checkoutForm.get('address.country')?.touched && checkoutForm.get('address.country')?.invalid" class="text-red-500 text-sm">
+          Country is required.
+        </div>
       </div>
       
 

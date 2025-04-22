@@ -66,7 +66,7 @@ export class OrderService {
 
   placeOrder(request: PlaceOrderRequest): Observable<void> {
     const token = localStorage.getItem('jwt');
-    console.log('JWT Token:', token); // Check the token value
+    console.log('JWT Token:', token); 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('jwt')}`,
       'Content-Type': 'application/json',
