@@ -1,0 +1,43 @@
+<div class="p-6">
+    <h1 class="text-2xl font-bold">Orders Management</h1>
+  
+    <!-- Orders Table -->
+    <table class="w-full border-collapse border border-gray-300 mt-4">
+      <thead>
+        <tr class="bg-gray-100 text-left">
+          <th class="py-2 px-4 border-b">Order ID</th>
+          <th class="py-2 px-4 border-b">Order Date</th>
+          <th class="py-2 px-4 border-b">Status</th>
+          <th class="py-2 px-4 border-b">Shipping Method</th>
+          <th class="py-2 px-4 border-b">Payment Method</th>
+          <th class="py-2 px-4 border-b">Shipping Address</th>
+          <th class="py-2 px-4 border-b">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders">
+          <td class="py-2 px-4 border-b">{{ order.id }}</td>
+          <td class="py-2 px-4 border-b">{{ order.orderDate | date:'short' }}</td>
+          <td class="py-2 px-4 border-b">
+            <select (change)="modifyStatus($event, order.id)" [value]="order.status.id">
+              <option *ngFor="let orderStatus of orderStatuses" [value]="orderStatus.id" [selected]="orderStatus.id === order.status.id">{{ orderStatus.status }}</option>
+            </select>
+          </td>
+          <td class="py-2 px-4 border-b">{{ order.shippingMethod.name }} ({{ order.shippingMethod.price  }})</td>
+          <td class="py-2 px-4 border-b">{{ order.paymentMethod.name }}</td>
+          <td class="py-2 px-4 border-b">
+            {{ order.address.street }} {{ order.address.houseNumber }},
+            {{ order.address.city }} - {{ order.address.postalCode }}
+            <span *ngIf="order.address.country" class="block">({{ order.address.country }})</span>
+          </td>
+          <td class="py-2 px-4 border-b">
+            <button 
+            (click)="deleteOrder(order.id)"
+            class="bg-red-500 text-white px-2 py-1 rounded">
+              Delete
+            </button>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
